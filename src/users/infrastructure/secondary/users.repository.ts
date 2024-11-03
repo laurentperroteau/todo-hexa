@@ -2,11 +2,12 @@ import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../../dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
+import { UsersRepositoryPort } from '../../domain/users.repository.port';
 
 const users: UserEntity[] = [];
 
 @Injectable()
-export class UsersRepository {
+export class UsersRepository implements UsersRepositoryPort {
   async create(createUserDto: CreateUserDto): Promise<void> {
     users.push({ ...createUserDto, id: randomUUID() });
     return Promise.resolve();
