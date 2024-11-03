@@ -20,9 +20,23 @@ export class TasksController {
     return this.tasksService.create(createTaskDto);
   }
 
+  @Post('/users/:id')
+  createWithUser(
+    @Param('id') id: string,
+    @Body() createTaskDto: CreateTaskDto,
+  ) {
+    return this.tasksService.createWithUser(createTaskDto, id);
+  }
+
   @Get()
   findAll() {
     return this.tasksService.findAll();
+  }
+
+  @Get('/users/:id')
+  findAllByUserId(@Param('id') id: string) {
+    console.log('id', id);
+    return this.tasksService.findAllByUserId(id);
   }
 
   @Get(':id')

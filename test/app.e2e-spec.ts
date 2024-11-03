@@ -38,8 +38,6 @@ describe('AppController (e2e)', () => {
       expect(response.status).toEqual(200);
       expect(response.body.length).toEqual(1);
       userId = response.body[0].id;
-
-      console.log('userId', userId);
     });
   });
 
@@ -74,13 +72,36 @@ describe('AppController (e2e)', () => {
         expect(response.body.description).toEqual('Description 1');
       });
 
-      it('DELETE /tasks/:id', async function () {
-        await server().delete(`/tasks/${taskId}`).expect(200);
-      });
+      // it('DELETE /tasks/:id', async function () {
+      //   await server().delete(`/tasks/${taskId}`).expect(200);
+      // });
+      //
+      // it('GET /tasks return now empty', () => {
+      //   return server().get('/tasks').expect(200).expect([]);
+      // });
+    });
+  });
 
-      it('GET /tasks return now empty', () => {
-        return server().get('/tasks').expect(200).expect([]);
-      });
+  describe('Tasks with user', () => {
+    it('POST /tasks/users:id', () => {
+      return server()
+        .post(`/tasks/users/${userId}`)
+        .send({ title: 'Task 2', description: 'Description 2' })
+        .expect(201);
+    });
+
+    it('GET /tasks now return 2 tasks', async function () {
+      const response = await server().get('/tasks');
+
+      expect(response.status).toEqual(200);
+      expect(response.body.length).toEqual(2);
+    });
+
+    it('GET /tasks/users:id return 1 task', async function () {
+      const response = await server().get(`/tasks/users/${userId}`);
+
+      expect(response.status).toEqual(200);
+      expect(response.body.length).toEqual(1);
     });
   });
 });

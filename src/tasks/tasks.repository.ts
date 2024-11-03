@@ -13,12 +13,24 @@ export class TasksRepository {
     return Promise.resolve();
   }
 
+  async createWithUser(
+    createTaskDto: CreateTaskDto,
+    userId: string,
+  ): Promise<void> {
+    tasks.push({ ...createTaskDto, id: randomUUID(), userId });
+    return Promise.resolve();
+  }
+
   findAll(): Promise<TaskEntity[]> {
     return Promise.resolve(tasks);
   }
 
   findOne(id: string): Promise<TaskEntity | undefined> {
     return Promise.resolve(tasks.find((task) => task.id === id));
+  }
+
+  findAllByUser(userId: string): Promise<TaskEntity[]> {
+    return Promise.resolve(tasks.filter((task) => task.userId === userId));
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto): Promise<void> {

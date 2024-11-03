@@ -6,12 +6,21 @@ import { TasksRepository } from './tasks.repository';
 @Injectable()
 export class TasksService {
   constructor(private tasksRepository: TasksRepository) {}
+
   create(createTaskDto: CreateTaskDto) {
     return this.tasksRepository.create(createTaskDto);
   }
 
+  createWithUser(createTaskDto: CreateTaskDto, userId: string) {
+    return this.tasksRepository.createWithUser(createTaskDto, userId);
+  }
+
   findAll() {
     return this.tasksRepository.findAll();
+  }
+
+  findAllByUserId(userId: string) {
+    return this.tasksRepository.findAllByUser(userId);
   }
 
   findOne(id: string) {
