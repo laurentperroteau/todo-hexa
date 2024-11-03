@@ -1,8 +1,7 @@
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UserEntity } from '../infrastructure/secondary/entities/user.entity';
+import { User } from './user.model';
 
 export abstract class UsersRepositoryPort {
-  abstract create(createUserDto: CreateUserDto): Promise<void>;
-  abstract findAll(): Promise<UserEntity[]>;
-  abstract findOne(id: string): Promise<UserEntity | undefined>;
+  abstract create(userToCreate: Omit<User, 'id'>): Promise<void>;
+  abstract findAll(): Promise<User[]>;
+  abstract findOne(id: string): Promise<User | undefined>;
 }

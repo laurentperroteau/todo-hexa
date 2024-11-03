@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepositoryPort } from './users.repository.port';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { User } from './user.model';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepositoryPort) {}
 
-  create(createUserDto: CreateUserDto) {
-    return this.usersRepository.create(createUserDto);
+  create(userToCreate: Omit<User, 'id'>) {
+    return this.usersRepository.create(userToCreate);
   }
 
   findAll() {
