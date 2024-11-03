@@ -1,4 +1,12 @@
 export type User = {
   id: string;
-  name: string;
+  fullName: string;
 };
+
+export class UserToCreate {
+  fullName: string;
+
+  constructor(user: UserToCreate) {
+    this.fullName = user.fullName;
+  }
+}
