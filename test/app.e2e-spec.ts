@@ -17,8 +17,30 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
+  let userId: string;
+
   it('/ (GET)', () => {
     return server().get('/').expect(200).expect('Hello World!');
+  });
+
+  describe('Users CRUD', () => {
+    it('GET /users', () => {
+      return server().get('/users').expect(200).expect([]);
+    });
+
+    it('POST /users', () => {
+      return server().post('/users').send({ name: 'User 1' }).expect(201);
+    });
+
+    it('GET /users with created use', async function () {
+      const response = await server().get('/users');
+
+      expect(response.status).toEqual(200);
+      expect(response.body.length).toEqual(1);
+      userId = response.body[0].id;
+
+      console.log('userId', userId);
+    });
   });
 
   describe('Tasks CRUD', () => {
@@ -34,18 +56,18 @@ describe('AppController (e2e)', () => {
     });
 
     describe('Created task', () => {
-      let id: number;
+      let taskId: string;
 
-      it('GET /tasks after post', async function () {
+      it('GET /tasks with created task', async function () {
         const response = await server().get('/tasks');
 
         expect(response.status).toEqual(200);
         expect(response.body.length).toEqual(1);
-        id = response.body[0].id;
+        taskId = response.body[0].id;
       });
 
       it('GET /tasks/:id', async function () {
-        const response = await server().get(`/tasks/${id}`);
+        const response = await server().get(`/tasks/${taskId}`);
 
         expect(response.status).toEqual(200);
         expect(response.body.title).toEqual('Task 1');
@@ -53,7 +75,7 @@ describe('AppController (e2e)', () => {
       });
 
       it('DELETE /tasks/:id', async function () {
-        await server().delete(`/tasks/${id}`).expect(200);
+        await server().delete(`/tasks/${taskId}`).expect(200);
       });
 
       it('GET /tasks return now empty', () => {
