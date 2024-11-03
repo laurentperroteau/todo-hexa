@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from '../../dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 
 const users: UserEntity[] = [];
