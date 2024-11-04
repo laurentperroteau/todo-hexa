@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { UsersRepositoryPort } from './users.repository.port';
 import { User } from './user.model';
 
-@Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepositoryPort) {}
 
