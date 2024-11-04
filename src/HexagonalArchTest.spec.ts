@@ -115,18 +115,18 @@ describe('HexagonalArchTest', () => {
   //   });
   // });
 
-  // describe('Primary', () => {
-  //   it('Should not depend on secondary', () => {
-  //     noClasses()
-  //       .that()
-  //       .resideInAPackage('..primary..')
-  //       .should()
-  //       .dependOnClassesThat()
-  //       .resideInAnyPackage('..secondary..')
-  //       .because('Primary should not interact with secondary')
-  //       .check(srcProject.allClasses());
-  //   });
-  // });
+  describe('Primary', () => {
+    it('Should not depend on secondary', () => {
+      noClasses()
+        .that()
+        .resideInAPackage('..primary..')
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage('..secondary..')
+        .because('Primary should not interact with secondary')
+        .check(srcProject.allClasses());
+    });
+  });
 
   // describe('Secondary', () => {
   //   it('should not depend on application', () => {
