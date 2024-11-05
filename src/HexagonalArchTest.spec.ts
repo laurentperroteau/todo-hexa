@@ -144,16 +144,16 @@ describe('HexagonalArchTest', () => {
         .check(srcProject.allClasses());
     });
 
-    // it('should not depend on application', () => {
-    //   noClasses()
-    //     .that()
-    //     .resideInAPackage('..infrastructure.secondary..')
-    //     .should()
-    //     .dependOnClassesThat()
-    //     .resideInAPackage('..application..')
-    //     .because('Secondary should not depend on application')
-    //     .check(srcProject.allClasses());
-    // });
+    it('should not depend on application', () => {
+      noClasses()
+        .that()
+        .resideInAPackage('..infrastructure.secondary..')
+        .should()
+        .dependOnClassesThat()
+        .resideInAPackage('..application..')
+        .because('Secondary should not depend on application')
+        .check(srcProject.allClasses());
+    });
 
     // it.each([...sharedKernels, ...businessContexts])(
     //   'should %s not depend on same context primary',
