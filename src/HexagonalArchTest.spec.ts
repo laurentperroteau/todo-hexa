@@ -100,20 +100,23 @@ describe('HexagonalArchTest', () => {
     // );
   });
 
-  // describe('Application', () => {
-  //   it('Should not depend on infrastructure', () => {
-  //     noClasses()
-  //       .that()
-  //       .resideInAPackage('..application..')
-  //       .should()
-  //       .dependOnClassesThat()
-  //       .resideInAnyPackage('..infrastructure..')
-  //       .because(
-  //         'Application should only depend on domain, not on infrastructure',
-  //       )
-  //       .check(srcProject.allClasses());
-  //   });
-  // });
+  /**
+   * ⚠️ Was '..infrastructure..' but I check only secondary (allow using primary dto in application)
+   */
+  describe('Application', () => {
+    it('Should not depend on secondary', () => {
+      noClasses()
+        .that()
+        .resideInAPackage('..application..')
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage('..secondary..')
+        .because(
+          'Application should only depend on domain, not on infrastructure',
+        )
+        .check(srcProject.allClasses());
+    });
+  });
 
   describe('Primary', () => {
     it('Should not depend on secondary', () => {
@@ -129,7 +132,7 @@ describe('HexagonalArchTest', () => {
   });
 
   describe('Secondary', () => {
-    // Not in arch-unit-ts exemple because include and test "application" folder
+    // Not in arch-unit-ts and normally unnecessary if domain isolated and controllers use application
     it('Should not depend on primary', () => {
       noClasses()
         .that()

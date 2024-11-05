@@ -1,36 +1,27 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { UsersService } from '../../domain/users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserToCreate } from '../../domain/user.model';
-import { UsersRepositoryPort } from '../../domain/users.repository.port';
+import { CreateUserUseCase } from '../../application/createUser.useCase';
+import { GetUsersUseCase } from '../../application/getUsers.useCase';
 
 @Controller('users')
 export class UsersController {
-  private readonly usersService: UsersService;
-
-  constructor(private readonly usersRepository: UsersRepositoryPort) {
-    /**
-     * Why instantiate manually ?
-     * - domain should not know Nest dependencies so we cannot use @Injectable
-     * - because controller is a singleton, it's safe to instantiate it here like a singleton
-     * - repository (which should absolutely be a singleton) is still injected with Nest DI
-     */
-    this.usersService = new UsersService(usersRepository);
-  }
+  constructor(
+    private readonly createUserUseCase: CreateUserUseCase,
+    private getUsersUseCase: GetUsersUseCase,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    const user = new UserToCreate({ fullName: createUserDto.name });
-    return this.usersService.create(user);
+    return this.createUserUseCase.execute(createUserDto);
   }
 
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.getUsersUseCase.getAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+    return this.getUsersUseCase.getOne(id);
   }
 }
