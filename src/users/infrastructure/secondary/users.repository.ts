@@ -2,22 +2,28 @@ import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from './entities/user.entity';
 import { UsersRepositoryPort } from '../../domain/users.repository.port';
-import { CreateUserDto } from '../primary/dto/create-user.dto';
+import { User } from '../../domain/user.model';
 
 const users: UserEntity[] = [];
 
 @Injectable()
 export class UsersRepository implements UsersRepositoryPort {
-  async create(createUserDto: CreateUserDto): Promise<void> {
-    users.push({ ...createUserDto, id: randomUUID() });
+  async create(userToCreate: Omit<User, 'id'>): Promise<void> {
+    const userEntity = new UserEntity({
+      ...userToCreate,
+      id: randomUUID(),
+    });
+    users.push(userEntity);
     return Promise.resolve();
   }
 
-  findAll(): Promise<UserEntity[]> {
-    return Promise.resolve(users);
+  async findAll(): Promise<User[]> {
+    const usersEntities = await Promise.resolve(users);
+    return usersEntities.map(UserEntity.toDomain);
   }
 
-  findOne(id: string): Promise<UserEntity | undefined> {
-    return Promise.resolve(users.find((user) => user.id === id));
+  async findOne(id: string): Promise<User | undefined> {
+    const user = await users.find((user) => user.id === id);
+    return UserEntity.toDomain(user);
   }
 }

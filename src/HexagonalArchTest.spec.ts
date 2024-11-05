@@ -13,7 +13,7 @@ describe('HexagonalArchTest', () => {
   );
 
   const sharedKernels = packagesWithContext(SharedKernel.name);
-  // const businessContexts = packagesWithContext(BusinessContext.name);
+  const businessContexts = packagesWithContext(BusinessContext.name);
 
   // function otherBusinessContextsDomains(context: string): string[] {
   //   return businessContexts
@@ -44,7 +44,7 @@ describe('HexagonalArchTest', () => {
   //         .check(srcProject.allClasses());
   //     },
   //   );
-  //
+  // TODO sur HM not Typescript but internal and file with prefix InternalAdapter.ts
   //   it('primary TypeScript Adapters should only be called from secondaries', () => {
   //     classes()
   //       .that()
@@ -128,30 +128,42 @@ describe('HexagonalArchTest', () => {
     });
   });
 
-  // describe('Secondary', () => {
-  //   it('should not depend on application', () => {
-  //     noClasses()
-  //       .that()
-  //       .resideInAPackage('..infrastructure.secondary..')
-  //       .should()
-  //       .dependOnClassesThat()
-  //       .resideInAPackage('..application..')
-  //       .because('Secondary should not depend on application')
-  //       .check(srcProject.allClasses());
-  //   });
-  //
-  //   it.each([...sharedKernels, ...businessContexts])(
-  //     'should %s not depend on same context primary',
-  //     (context) => {
-  //       noClasses()
-  //         .that()
-  //         .resideInAPackage(context + '.infrastructure.secondary..')
-  //         .should()
-  //         .onlyDependOnClassesThat()
-  //         .resideInAPackage(context + '.infrastructure.primary..')
-  //         .because("Secondary should not loop to its own context's primary")
-  //         .check(srcProject.allClasses());
-  //     },
-  //   );
-  // });
+  describe('Secondary', () => {
+    // Not in arch-unit-ts exemple because include and test "application" folder
+    it('Should not depend on primary', () => {
+      noClasses()
+        .that()
+        .resideInAPackage('..secondary..')
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage('..primary..')
+        .because('Secondary should not interact with primary')
+        .check(srcProject.allClasses());
+    });
+
+    // it('should not depend on application', () => {
+    //   noClasses()
+    //     .that()
+    //     .resideInAPackage('..infrastructure.secondary..')
+    //     .should()
+    //     .dependOnClassesThat()
+    //     .resideInAPackage('..application..')
+    //     .because('Secondary should not depend on application')
+    //     .check(srcProject.allClasses());
+    // });
+
+    // it.each([...sharedKernels, ...businessContexts])(
+    //   'should %s not depend on same context primary',
+    //   (context) => {
+    //     noClasses()
+    //       .that()
+    //       .resideInAPackage(context + '.infrastructure.secondary..')
+    //       .should()
+    //       .onlyDependOnClassesThat()
+    //       .resideInAPackage(context + '.infrastructure.primary..')
+    //       .because("Secondary should not loop to its own context's primary")
+    //       .check(srcProject.allClasses());
+    //   },
+    // );
+  });
 });
