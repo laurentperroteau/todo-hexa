@@ -6,14 +6,20 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { UsersRepository } from '../users/infrastructure/secondary/users.repository';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+  constructor(
+    private readonly tasksService: TasksService,
+    private readonly usersRepository: UsersRepository,
+  ) {}
 
   @Post()
   create(@Body() createTaskDto: CreateTaskDto) {
@@ -21,10 +27,14 @@ export class TasksController {
   }
 
   @Post('/users/:id')
-  createWithUser(
+  async createWithUser(
     @Param('id') id: string,
     @Body() createTaskDto: CreateTaskDto,
   ) {
+    const user = await this.usersRepository.findOne(id);
+    if (!user) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    }
     return this.tasksService.createWithUser(createTaskDto, id);
   }
 
@@ -34,8 +44,11 @@ export class TasksController {
   }
 
   @Get('/users/:id')
-  findAllByUserId(@Param('id') id: string) {
-    console.log('id', id);
+  async findAllByUserId(@Param('id') id: string) {
+    const user = await this.usersRepository.findOne(id);
+    if (!user) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    }
     return this.tasksService.findAllByUserId(id);
   }
 

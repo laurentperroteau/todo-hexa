@@ -12,5 +12,6 @@ import { GetUsersUseCase } from './application/getUsers.useCase';
     GetUsersUseCase,
     { provide: UsersRepositoryPort, useClass: UsersRepository },
   ],
+  exports: [UsersRepositoryPort],
 })
 export class UsersModule {}

@@ -24,6 +24,7 @@ export class UsersRepository implements UsersRepositoryPort {
 
   async findOne(id: string): Promise<User | undefined> {
     const user = await users.find((user) => user.id === id);
+    if (!user) return undefined;
     return UserEntity.toDomain(user);
   }
 }
