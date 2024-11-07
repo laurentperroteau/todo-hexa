@@ -1,15 +1,17 @@
 import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { CreateTaskDto } from '../presentation/dto/create-task.dto';
+import { UpdateTaskDto } from '../presentation/dto/update-task.dto';
 import { TaskEntity } from './entities/task.entity';
 
 const tasks: TaskEntity[] = [];
 
 @Injectable()
 export class TasksRepository {
-  async create(createTaskDto: CreateTaskDto): Promise<void> {
-    tasks.push({ ...createTaskDto, id: randomUUID() });
+  async create(
+    createTaskDto: CreateTaskDto & { done: boolean; userId?: string },
+  ): Promise<void> {
+    tasks.push(new TaskEntity({ ...createTaskDto, id: randomUUID() }));
     return Promise.resolve();
   }
 

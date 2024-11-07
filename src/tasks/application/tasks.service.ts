@@ -1,18 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
-import { TasksRepository } from './tasks.repository';
+import { CreateTaskDto } from '../presentation/dto/create-task.dto';
+import { UpdateTaskDto } from '../presentation/dto/update-task.dto';
+import { TasksRepository } from '../data-access/tasks.repository';
 
 @Injectable()
 export class TasksService {
   constructor(private tasksRepository: TasksRepository) {}
 
   create(createTaskDto: CreateTaskDto) {
-    return this.tasksRepository.create(createTaskDto);
+    return this.tasksRepository.create({ ...createTaskDto, done: false });
   }
 
   createWithUser(createTaskDto: CreateTaskDto, userId: string) {
-    return this.tasksRepository.createWithUser(createTaskDto, userId);
+    return this.tasksRepository.create({
+      ...createTaskDto,
+      done: false,
+      userId,
+    });
   }
 
   findAll() {
