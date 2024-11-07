@@ -1,38 +1,59 @@
+import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from '../presentation/dto/create-task.dto';
 import { UpdateTaskDto } from '../presentation/dto/update-task.dto';
 import { TasksRepository } from '../data-access/tasks.repository';
+import { Task } from './task.model';
 
 @Injectable()
 export class TasksService {
   constructor(private tasksRepository: TasksRepository) {}
 
   create(createTaskDto: CreateTaskDto) {
-    return this.tasksRepository.create({ ...createTaskDto, done: false });
+    const taskToCreate = Task.toEntity({
+      ...createTaskDto,
+      id: randomUUID(),
+      isDone: false,
+    });
+
+    return this.tasksRepository.create(taskToCreate);
   }
 
   createWithUser(createTaskDto: CreateTaskDto, userId: string) {
-    return this.tasksRepository.create({
+    const taskToCreate = Task.toEntity({
       ...createTaskDto,
-      done: false,
+      id: randomUUID(),
+      isDone: false,
       userId,
     });
+
+    return this.tasksRepository.create(taskToCreate);
   }
 
-  findAll() {
-    return this.tasksRepository.findAll();
+  async findAll(): Promise<Task[]> {
+    const tasks = await this.tasksRepository.findAll();
+    return tasks.map((task) => Task.fromEntity(task));
   }
 
-  findAllByUserId(userId: string) {
-    return this.tasksRepository.findAllByUser(userId);
+  async findAllByUserId(userId: string): Promise<Task[]> {
+    const tasks = await this.tasksRepository.findAllByUser(userId);
+    return tasks.map((task) => Task.fromEntity(task));
   }
 
-  findOne(id: string) {
-    return this.tasksRepository.findOne(id);
+  async findOne(id: string): Promise<Task | undefined> {
+    const task = await this.tasksRepository.findOne(id);
+    if (!task) return undefined;
+
+    return Task.fromEntity(task);
   }
 
-  update(id: string, updateTaskDto: UpdateTaskDto) {
-    return this.tasksRepository.update(id, updateTaskDto);
+  async update(id: string, updateTaskDto: UpdateTaskDto) {
+    return this.tasksRepository.update(id, {
+      id: id,
+      label: updateTaskDto.label,
+      done: updateTaskDto.isDone,
+      userId: updateTaskDto.userId,
+    });
   }
 
   remove(id: string) {

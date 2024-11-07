@@ -1,4 +1,4 @@
 export class CreateTaskDto {
   label: string;
-  done?: false;
+  isDone?: false;
 }

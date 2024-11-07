@@ -13,6 +13,7 @@ import { TasksService } from '../application/tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { UsersRepository } from '../../users/infrastructure/secondary/users.repository';
+import { Task } from '../application/task.model';
 
 @Controller('tasks')
 export class TasksController {
@@ -39,12 +40,12 @@ export class TasksController {
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<Task[]> {
     return this.tasksService.findAll();
   }
 
   @Get('/users/:id')
-  async findAllByUserId(@Param('id') id: string) {
+  async findAllByUserId(@Param('id') id: string): Promise<Task[]> {
     const user = await this.usersRepository.findOne(id);
     if (!user) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
@@ -53,7 +54,7 @@ export class TasksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<Task | undefined> {
     return this.tasksService.findOne(id);
   }
 
