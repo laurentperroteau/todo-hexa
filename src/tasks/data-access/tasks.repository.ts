@@ -1,25 +1,12 @@
-import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { CreateTaskDto } from '../presentation/dto/create-task.dto';
-import { UpdateTaskDto } from '../presentation/dto/update-task.dto';
 import { TaskEntity } from './entities/task.entity';
 
 const tasks: TaskEntity[] = [];
 
 @Injectable()
 export class TasksRepository {
-  async create(
-    createTaskDto: CreateTaskDto & { done: boolean; userId?: string },
-  ): Promise<void> {
-    tasks.push(new TaskEntity({ ...createTaskDto, id: randomUUID() }));
-    return Promise.resolve();
-  }
-
-  async createWithUser(
-    createTaskDto: CreateTaskDto,
-    userId: string,
-  ): Promise<void> {
-    tasks.push({ ...createTaskDto, id: randomUUID(), userId });
+  async create(taskToCreate: TaskEntity): Promise<void> {
+    tasks.push(taskToCreate);
     return Promise.resolve();
   }
 
@@ -35,12 +22,13 @@ export class TasksRepository {
     return Promise.resolve(tasks.filter((task) => task.userId === userId));
   }
 
-  async update(id: string, updateTaskDto: UpdateTaskDto): Promise<void> {
-    const task = await this.findOne(id);
-    if (!task) {
-      return;
+  async update(id: string, taskToUpdate: Partial<TaskEntity>): Promise<void> {
+    const currentTask = await this.findOne(id);
+    if (!currentTask) {
+      throw new Error('Task not found');
     }
-    tasks[id] = { ...task, ...updateTaskDto };
+
+    tasks[id] = { ...currentTask, ...taskToUpdate };
   }
 
   remove(id: string): Promise<void> {
