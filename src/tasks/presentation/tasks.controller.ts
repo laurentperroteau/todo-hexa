@@ -24,7 +24,7 @@ export class TasksController {
 
   @Post()
   create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+    return this.tasksService.create(CreateTaskDto.toDomain(createTaskDto));
   }
 
   @Post('/users/:id')
@@ -36,7 +36,7 @@ export class TasksController {
     if (!user) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
-    return this.tasksService.createWithUser(createTaskDto, id);
+    return this.tasksService.create(CreateTaskDto.toDomain(createTaskDto, id));
   }
 
   @Get()
