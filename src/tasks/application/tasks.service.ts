@@ -1,30 +1,17 @@
 import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { CreateTaskDto } from '../presentation/dto/create-task.dto';
-import { UpdateTaskDto } from '../presentation/dto/update-task.dto';
 import { TasksRepository } from '../data-access/tasks.repository';
-import { Task } from './task.model';
+import { Task, TaskToCreate } from './task.model';
 
 @Injectable()
 export class TasksService {
   constructor(private tasksRepository: TasksRepository) {}
 
-  create(createTaskDto: CreateTaskDto) {
+  create(createTaskDto: TaskToCreate) {
     const taskToCreate = Task.toEntity({
       ...createTaskDto,
       id: randomUUID(),
       isDone: false,
-    });
-
-    return this.tasksRepository.create(taskToCreate);
-  }
-
-  createWithUser(createTaskDto: CreateTaskDto, userId: string) {
-    const taskToCreate = Task.toEntity({
-      ...createTaskDto,
-      id: randomUUID(),
-      isDone: false,
-      userId,
     });
 
     return this.tasksRepository.create(taskToCreate);
@@ -47,12 +34,12 @@ export class TasksService {
     return Task.fromEntity(task);
   }
 
-  async update(id: string, updateTaskDto: UpdateTaskDto) {
+  async update(id: string, taskToUpdate: Partial<Task>) {
     return this.tasksRepository.update(id, {
       id: id,
-      label: updateTaskDto.label,
-      done: updateTaskDto.isDone,
-      userId: updateTaskDto.userId,
+      label: taskToUpdate.label,
+      done: taskToUpdate.isDone,
+      userId: taskToUpdate.userId,
     });
   }
 
