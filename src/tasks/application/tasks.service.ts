@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { TasksRepository } from '../data-access/tasks.repository';
 import { Task, TaskToCreate } from './task.model';
@@ -7,38 +6,32 @@ import { Task, TaskToCreate } from './task.model';
 export class TasksService {
   constructor(private tasksRepository: TasksRepository) {}
 
-  create(createTaskDto: TaskToCreate) {
-    const taskToCreate = Task.toEntity({
-      ...createTaskDto,
-      id: randomUUID(),
-      isDone: false,
-    });
-
+  create(taskToCreate: TaskToCreate) {
     return this.tasksRepository.create(taskToCreate);
   }
 
   async findAll(): Promise<Task[]> {
     const tasks = await this.tasksRepository.findAll();
-    return tasks.map((task) => Task.fromEntity(task));
+    return tasks;
   }
 
   async findAllByUserId(userId: string): Promise<Task[]> {
     const tasks = await this.tasksRepository.findAllByUser(userId);
-    return tasks.map((task) => Task.fromEntity(task));
+    return tasks;
   }
 
   async findOne(id: string): Promise<Task | undefined> {
     const task = await this.tasksRepository.findOne(id);
     if (!task) return undefined;
 
-    return Task.fromEntity(task);
+    return task;
   }
 
   async update(id: string, taskToUpdate: Partial<Task>) {
     return this.tasksRepository.update(id, {
       id: id,
       label: taskToUpdate.label,
-      done: taskToUpdate.isDone,
+      isDone: taskToUpdate.isDone,
       userId: taskToUpdate.userId,
     });
   }

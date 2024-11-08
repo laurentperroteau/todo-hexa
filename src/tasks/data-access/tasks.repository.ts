@@ -1,34 +1,55 @@
 import { Injectable } from '@nestjs/common';
 import { TaskEntity } from './entities/task.entity';
+import { Task, TaskToCreate } from '../application/task.model';
+import { randomUUID } from 'node:crypto';
 
 const tasks: TaskEntity[] = [];
 
 @Injectable()
 export class TasksRepository {
-  async create(taskToCreate: TaskEntity): Promise<void> {
-    tasks.push(taskToCreate);
+  async create(taskToCreate: TaskToCreate): Promise<void> {
+    const task = TaskEntity.fromDomain({
+      ...taskToCreate,
+      id: randomUUID(),
+      isDone: false,
+    });
+    tasks.push(task);
     return Promise.resolve();
   }
 
-  findAll(): Promise<TaskEntity[]> {
-    return Promise.resolve(tasks);
+  async findAll(): Promise<Task[]> {
+    const _tasks = await Promise.resolve(tasks);
+    return _tasks.map((task) => TaskEntity.toDomain(task));
   }
 
-  findOne(id: string): Promise<TaskEntity | undefined> {
-    return Promise.resolve(tasks.find((task) => task.id === id));
+  async findOne(id: string): Promise<Task | undefined> {
+    const task = await Promise.resolve(tasks.find((task) => task.id === id));
+    if (!task) return undefined;
+
+    return TaskEntity.toDomain(task);
   }
 
-  findAllByUser(userId: string): Promise<TaskEntity[]> {
-    return Promise.resolve(tasks.filter((task) => task.userId === userId));
+  async findAllByUser(userId: string): Promise<Task[]> {
+    const _tasks = await Promise.resolve(
+      tasks.filter((task) => task.userId === userId),
+    );
+    return _tasks.map((task) => TaskEntity.toDomain(task));
   }
 
-  async update(id: string, taskToUpdate: Partial<TaskEntity>): Promise<void> {
+  async update(id: string, taskToUpdate: Partial<Task>): Promise<void> {
     const currentTask = await this.findOne(id);
     if (!currentTask) {
       throw new Error('Task not found');
     }
 
-    tasks[id] = { ...currentTask, ...taskToUpdate };
+    const task = TaskEntity.fromDomain({
+      id,
+      label: taskToUpdate.label || currentTask.label,
+      isDone: taskToUpdate.isDone || currentTask.isDone,
+      userId: taskToUpdate.userId || currentTask.userId,
+    });
+
+    tasks[id] = { ...currentTask, ...task };
   }
 
   remove(id: string): Promise<void> {
