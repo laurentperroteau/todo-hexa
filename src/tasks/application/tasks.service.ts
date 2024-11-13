@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Task, TaskToCreate } from './task.model';
 import { ITasksRepository } from './port/tasks-repository.interface';
+import { DateHelper } from '../../common/helpers/dateHelper';
 
 @Injectable()
 export class TasksService {
@@ -12,7 +13,10 @@ export class TasksService {
 
   async findAll(): Promise<Task[]> {
     const tasks = await this.tasksRepository.findAll();
-    return tasks;
+    return DateHelper.sortRecordByDateFromNewestToOldest<Task>(
+      tasks,
+      'updatedDate',
+    );
   }
 
   async findAllByUserId(userId: string): Promise<Task[]> {

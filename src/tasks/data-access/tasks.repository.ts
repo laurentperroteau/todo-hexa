@@ -13,6 +13,7 @@ export class TasksRepository implements ITasksRepository {
       ...taskToCreate,
       id: randomUUID(),
       isDone: false,
+      updatedDate: new Date(),
     });
     tasks.push(task);
     return Promise.resolve();
@@ -47,6 +48,7 @@ export class TasksRepository implements ITasksRepository {
       id,
       label: taskToUpdate.label || currentTask.label,
       isDone: taskToUpdate.isDone || currentTask.isDone,
+      updatedDate: new Date(),
       userId: taskToUpdate.userId || currentTask.userId,
     });
 

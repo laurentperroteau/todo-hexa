@@ -1,10 +1,10 @@
 import { TasksService } from './tasks.service';
 import { ITasksRepository } from './port/tasks-repository.interface';
 import { Test, TestingModule } from '@nestjs/testing';
+import { DateHelper } from '../../common/helpers/dateHelper';
 
 describe(TasksService.name, () => {
   let tasksService: TasksService;
-  let tasksRepository: ITasksRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,7 +20,6 @@ describe(TasksService.name, () => {
     }).compile();
 
     tasksService = module.get<TasksService>(TasksService);
-    tasksRepository = module.get<ITasksRepository>(ITasksRepository);
   });
 
   it('should be defined', () => {

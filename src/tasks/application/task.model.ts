@@ -2,12 +2,14 @@ export class Task {
   id: string;
   label: string;
   isDone: boolean;
+  updatedDate: Date;
   userId?: string;
 
   constructor(task: Task) {
     this.id = task.id;
     this.label = task.label;
     this.isDone = task.isDone;
+    this.updatedDate = task.updatedDate;
     this.userId = task.userId;
   }
 }

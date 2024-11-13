@@ -4,12 +4,14 @@ export class TaskEntity {
   id: string;
   label: string;
   done: boolean;
+  updatedDate: Date;
   userId?: string;
 
   constructor(task: TaskEntity) {
     this.id = task.id;
     this.label = task.label;
     this.done = task.done;
+    this.updatedDate = task.updatedDate;
     this.userId = task.userId;
   }
 
@@ -18,6 +20,7 @@ export class TaskEntity {
       id: entity.id,
       label: entity.label,
       isDone: entity.done,
+      updatedDate: entity.updatedDate,
       userId: entity.userId,
     });
   }
@@ -27,6 +30,7 @@ export class TaskEntity {
       id: task.id,
       label: task.label,
       done: task.isDone,
+      updatedDate: task.updatedDate,
       userId: task.userId,
     });
   }

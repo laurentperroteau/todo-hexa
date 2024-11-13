@@ -5,9 +5,10 @@ import { TasksRepository } from './data-access/tasks.repository';
 import { UsersModule } from '../users/users.module';
 import { UsersRepository } from '../users/infrastructure/secondary/users.repository';
 import { ITasksRepository } from './application/port/tasks-repository.interface';
+import { CommonModule } from '../common/common.module';
 
 @Module({
-  imports: [UsersModule],
+  imports: [CommonModule, UsersModule],
   controllers: [TasksController],
   providers: [
     TasksService,
