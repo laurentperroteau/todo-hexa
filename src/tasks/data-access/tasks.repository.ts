@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { TaskEntity } from './entities/task.entity';
 import { Task, TaskToCreate } from '../application/task.model';
 import { randomUUID } from 'node:crypto';
+import { ITasksRepository } from '../application/port/tasks-repository.interface';
 
 const tasks: TaskEntity[] = [];
 
 @Injectable()
-export class TasksRepository {
+export class TasksRepository implements ITasksRepository {
   async create(taskToCreate: TaskToCreate): Promise<void> {
     const task = TaskEntity.fromDomain({
       ...taskToCreate,

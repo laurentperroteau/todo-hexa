@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { TasksRepository } from '../data-access/tasks.repository';
 import { Task, TaskToCreate } from './task.model';
+import { ITasksRepository } from './port/tasks-repository.interface';
 
 @Injectable()
 export class TasksService {
-  constructor(private tasksRepository: TasksRepository) {}
+  constructor(private tasksRepository: ITasksRepository) {}
 
   create(taskToCreate: TaskToCreate) {
     return this.tasksRepository.create(taskToCreate);
