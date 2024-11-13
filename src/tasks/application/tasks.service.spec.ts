@@ -3,6 +3,30 @@ import { ITasksRepository } from './port/tasks-repository.interface';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DateHelper } from '../../common/helpers/dateHelper';
 
+const tasks = [
+  {
+    id: '1',
+    label: 'Task 1',
+    isDone: false,
+    userId: '1',
+    updatedDate: new Date('2021-01-01'),
+  },
+  {
+    id: '2',
+    label: 'Task 2',
+    isDone: false,
+    userId: '1',
+    updatedDate: new Date('2021-01-02'),
+  },
+  {
+    id: '3',
+    label: 'Task 3',
+    isDone: false,
+    userId: '1',
+    updatedDate: new Date('2021-01-03'),
+  },
+];
+
 describe(TasksService.name, () => {
   let tasksService: TasksService;
 
@@ -13,7 +37,7 @@ describe(TasksService.name, () => {
         {
           provide: ITasksRepository,
           useValue: {
-            findAll: jest.fn(),
+            findAll: jest.fn().mockReturnValue(Promise.resolve(tasks)),
           },
         },
       ],
@@ -27,10 +51,11 @@ describe(TasksService.name, () => {
   });
 
   describe('findAll', () => {
-    it('should call tasksRepository.findAll', () => {
-      tasksService.findAll();
+    it('should return more recent date first', async () => {
+      const res = await tasksService.findAll();
+      const ids = res.map((task) => task.id);
 
-      expect(tasksRepository.findAll).toHaveBeenCalled();
+      expect(ids).toStrictEqual(['3', '2', '1']);
     });
   });
 });
