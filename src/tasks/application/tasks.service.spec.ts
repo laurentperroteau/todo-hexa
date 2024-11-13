@@ -1,7 +1,5 @@
 import { TasksService } from './tasks.service';
 import { ITasksRepository } from './port/tasks-repository.interface';
-import { Test, TestingModule } from '@nestjs/testing';
-import { DateHelper } from '../../common/helpers/dateHelper';
 
 const tasks = [
   {
@@ -27,23 +25,17 @@ const tasks = [
   },
 ];
 
+class TaskRepositoryMock implements Partial<ITasksRepository> {
+  findAll = () => Promise.resolve(tasks);
+}
+
 describe(TasksService.name, () => {
   let tasksService: TasksService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        TasksService,
-        {
-          provide: ITasksRepository,
-          useValue: {
-            findAll: jest.fn().mockReturnValue(Promise.resolve(tasks)),
-          },
-        },
-      ],
-    }).compile();
-
-    tasksService = module.get<TasksService>(TasksService);
+    tasksService = new TasksService(
+      new TaskRepositoryMock() as ITasksRepository,
+    );
   });
 
   it('should be defined', () => {
