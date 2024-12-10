@@ -14,10 +14,12 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { UsersRepository } from '../../users/infrastructure/secondary/users.repository';
 import { Task } from '../domain/task.model';
+import { GetAllTasksUseCase } from '../application/getAllTasks.useCase';
 
 @Controller('tasks')
 export class TasksController {
   constructor(
+    private readonly getAllTasksUseCase: GetAllTasksUseCase,
     private readonly tasksService: TasksService,
     private readonly usersRepository: UsersRepository,
   ) {}
@@ -41,7 +43,7 @@ export class TasksController {
 
   @Get()
   findAll(): Promise<Task[]> {
-    return this.tasksService.findAll();
+    return this.getAllTasksUseCase.execute();
   }
 
   @Get('/users/:id')
