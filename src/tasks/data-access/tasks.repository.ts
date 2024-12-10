@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { TaskEntity } from './entities/task.entity';
-import { Task, TaskToCreate } from '../application/task.model';
+import { Task, TaskToCreate } from '../domain/task.model';
 import { randomUUID } from 'node:crypto';
-import { ITasksRepository } from '../application/port/tasks-repository.interface';
+import { ITasksRepository } from '../domain/port/tasks-repository.interface';
 
 const tasks: TaskEntity[] = [];
 

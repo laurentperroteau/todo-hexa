@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TasksService } from './application/tasks.service';
+import { TasksService } from './domain/tasks.service';
 import { TasksController } from './presentation/tasks.controller';
 import { TasksRepository } from './data-access/tasks.repository';
 import { UsersModule } from '../users/users.module';
 import { UsersRepository } from '../users/infrastructure/secondary/users.repository';
-import { ITasksRepository } from './application/port/tasks-repository.interface';
+import { ITasksRepository } from './domain/port/tasks-repository.interface';
 import { CommonModule } from '../common/common.module';
 
 @Module({

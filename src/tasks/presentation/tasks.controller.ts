@@ -9,11 +9,11 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { TasksService } from '../application/tasks.service';
+import { TasksService } from '../domain/tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { UsersRepository } from '../../users/infrastructure/secondary/users.repository';
-import { Task } from '../application/task.model';
+import { Task } from '../domain/task.model';
 
 @Controller('tasks')
 export class TasksController {

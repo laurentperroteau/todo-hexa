@@ -1,4 +1,4 @@
-import { Task } from '../../application/task.model';
+import { Task } from '../../domain/task.model';
 
 export class TaskEntity {
   id: string;

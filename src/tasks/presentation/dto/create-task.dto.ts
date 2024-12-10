@@ -1,4 +1,4 @@
-import { TaskToCreate } from '../../application/task.model';
+import { TaskToCreate } from '../../domain/task.model';
 
 export class CreateTaskDto {
   label: string;
