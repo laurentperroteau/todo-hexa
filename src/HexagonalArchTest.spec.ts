@@ -46,7 +46,7 @@ describe('HexagonalArchTest', () => {
     //       .check(srcProject.allClasses());
     //   },
     // );
-    // TODO sur HM not Typescript but internal and file with prefix InternalAdapter.ts
+    // TODO it's not about internal adapter
     //   it('primary TypeScript Adapters should only be called from secondaries', () => {
     //     classes()
     //       .that()

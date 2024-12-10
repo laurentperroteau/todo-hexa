@@ -10,8 +10,9 @@ import { GetUsersUseCase } from './application/getUsers.useCase';
   providers: [
     CreateUserUseCase,
     GetUsersUseCase,
+    UsersRepository, // Required for export
     { provide: UsersRepositoryPort, useClass: UsersRepository },
   ],
-  exports: [UsersRepositoryPort],
+  exports: [UsersRepository], // TODO should be internal adapter
 })
 export class UsersModule {}

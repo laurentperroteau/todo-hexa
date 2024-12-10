@@ -15,18 +15,24 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { UsersRepository } from '../../users/infrastructure/secondary/users.repository';
 import { Task } from '../domain/task.model';
 import { GetAllTasksUseCase } from '../application/getAllTasks.useCase';
+import { CreateTaskUseCase } from '../application/createTask.useCase';
+import { CreateTaskWithUserUseCase } from '../application/createTaskWithUser.useCase';
+import { FindAllTasksByUserUseCase } from '../application/findAllTasksByUser.useCase';
 
 @Controller('tasks')
 export class TasksController {
   constructor(
+    private readonly createTaskUseCase: CreateTaskUseCase,
+    private readonly createTaskWithUserUseCase: CreateTaskWithUserUseCase,
     private readonly getAllTasksUseCase: GetAllTasksUseCase,
+    private readonly findAllTasksByUserUseCase: FindAllTasksByUserUseCase,
     private readonly tasksService: TasksService,
     private readonly usersRepository: UsersRepository,
   ) {}
 
   @Post()
   create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(CreateTaskDto.toDomain(createTaskDto));
+    return this.createTaskUseCase.execute(createTaskDto);
   }
 
   @Post('/users/:id')
@@ -34,11 +40,7 @@ export class TasksController {
     @Param('id') id: string,
     @Body() createTaskDto: CreateTaskDto,
   ) {
-    const user = await this.usersRepository.findOne(id);
-    if (!user) {
-      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
-    }
-    return this.tasksService.create(CreateTaskDto.toDomain(createTaskDto, id));
+    return this.createTaskWithUserUseCase.execute(id, createTaskDto);
   }
 
   @Get()
@@ -48,11 +50,7 @@ export class TasksController {
 
   @Get('/users/:id')
   async findAllByUserId(@Param('id') id: string): Promise<Task[]> {
-    const user = await this.usersRepository.findOne(id);
-    if (!user) {
-      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
-    }
-    return this.tasksService.findAllByUserId(id);
+    return this.findAllTasksByUserUseCase.execute(id);
   }
 
   @Get(':id')
